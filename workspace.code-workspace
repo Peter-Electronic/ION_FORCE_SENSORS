@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "Transmistter",
+			"path": "Transmistter"
+		},
+		{
+			"name": "Receiver",
+			"path": "Receiver"
+		},
+		{
+			"name": "ION_FORCE_SENSORS",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
