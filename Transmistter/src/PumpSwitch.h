@@ -35,7 +35,7 @@ void handleEvent(AceButton* /*button*/, uint8_t eventType,
     // myservo.write(180); //Counterclockwise maximum speed rotation
       break;
     case AceButton::kEventReleased:
-    myservo.write(0);  //Stop
+    myservo.write(90);  //Stop
       break;
   }
 }
