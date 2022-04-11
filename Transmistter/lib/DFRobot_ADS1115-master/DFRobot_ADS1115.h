@@ -317,7 +317,7 @@ public:
    * @param  channel   The analog channnel of MCU
    * @return Voltage
    */
-  uint16_t readVoltage(uint8_t channel);
+  float readVoltage(uint8_t channel);
   /**
    * @fn comparatorVoltage
    * @brief Sets up the comparator causing the ALERT/RDY pin to assert 
@@ -326,7 +326,8 @@ public:
    * @param channel  The analog channnel of MCU
    * @return Voltage 
    */
-  int16_t comparatorVoltage(uint8_t channel);
+  float calib(uint8_t channel);
+  float comparatorVoltage(uint8_t channel);
   /**
    * @fn setLowThreshold
    * @brief Sets the low threshold value

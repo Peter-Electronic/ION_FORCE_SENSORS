@@ -183,7 +183,7 @@ void DFRobot_ADS1115::setOSMode(eADSOSMode_t value){
  *Negative voltages cannot be applied to this circuit because the
  *ADS1115 can only accept positive voltages
  */
-uint16_t DFRobot_ADS1115::readVoltage(uint8_t channel)
+float DFRobot_ADS1115::readVoltage(uint8_t channel)
 {
     if (channel > 3)
         return 0;
@@ -206,9 +206,18 @@ uint16_t DFRobot_ADS1115::readVoltage(uint8_t channel)
     delay(ads_conversionDelay);
     // Read the conversion results
     // 16-bit unsigned results for the ADS1115
-    int16_t Voltage = 0;
-    Voltage = (int16_t)readAdsReg(ads_i2cAddress, DFROBOT_ADS1115_POINTER_CONVERT)*coefficient;
+    float Voltage = 0;
+    Voltage = readAdsReg(ads_i2cAddress, DFROBOT_ADS1115_POINTER_CONVERT)*coefficient;
     return Voltage;
+}
+float DFRobot_ADS1115::calib(uint8_t channel)
+{
+    if (channel > 3)
+        return 0;
+    float Voltage = 0;
+    for(int i=0;i<20;i++)
+    Voltage += readVoltage(channel);
+    return Voltage/20;
 }
 /*
  *Sets up the comparator causing the ALERT/RDY pin to assert 

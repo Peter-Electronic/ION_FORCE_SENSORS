@@ -237,16 +237,5 @@ void SenderLoop(float *FL, byte sizeOfData)
             enableInterrupt = true;
         }
         loraLoopMillis = millis();
-        float test[sizeOfData];
-        for (byte i = 0; i < sizeOfData; i++)
-        {
-            byte2float(&test[i], buff, i * 4);
-             Serial.print(test[i]);
-        Serial.print(",");
-        }
-        Serial.println();
-        Serial.print(F("[SX1276] Datarate:\t"));
-        Serial.print(radio.getDataRate());
-        Serial.println(F(" bps"));
     }
 }
