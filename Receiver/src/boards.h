@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include "utilities.h"
-
+#define RECEIVER
 #ifdef HAS_SDCARD
 #include <SD.h>
 #include <FS.h>

@@ -9,8 +9,8 @@
 long prevMillisBlynk = 0;
 int intervalBlynk = 500;
 long prevMillisSerial = 0;
-int intervalSerial = 500;
-    int i;
+int intervalSerial = 100;
+    int ii;
     float sens[num_sensor];
 #include "utilities.h"
 #include "boards.h"
@@ -42,24 +42,24 @@ void setup()
 void loop()
 {
     ReceiverLoop(sens,num_sensor);
-    // if (millis() - prevMillisSerial > intervalSerial)
-    // {
-    //     prevMillisSerial = millis();
-    //     for(int i=0;i<num_sensor;i++){
-    //     Serial.print("\t");
-    //     Serial.print(sens[i], 3); // Serial.print("mV\t");
-    //     }
-    //     Serial.println();
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print(";");
+    if (millis() - prevMillisSerial > intervalSerial)
+    {
+        prevMillisSerial = millis();
+        for(int i=0;i<num_sensor;i++){
+        Serial.print(random(3), 3); // Serial.print("mV\t");
+        if(i==3) break;
+        Serial.print("\t");
+        }
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        Serial.print(";");
 
-    // }
+    }
     #ifdef Blynk_ON
     Blynk.run();
     if (millis() - prevMillisBlynk > intervalBlynk)
@@ -67,13 +67,13 @@ void loop()
         // Up data to Blynk
         // Serial.print("\t Publish pressure data to Blynk V0\t");
         prevMillisBlynk = millis();
-        if(i<(num_sensor-1)){
-            i++;
-        Blynk.virtualWrite(i, sens[i]);
+        if(ii<(num_sensor-1)){
+            ii++;
+        Blynk.virtualWrite(ii, sens[ii]);
         }
         else{
-        i=0;
-        Blynk.virtualWrite(i, sens[i]);
+        ii=0;
+        Blynk.virtualWrite(ii, sens[ii]);
         }
     }
     #endif

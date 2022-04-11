@@ -14,7 +14,7 @@ int intervalSerial = 500;
     int i;
 #include "utilities.h"
 #include "boards.h"
-#include "ADC.h"
+//#include "ADC.h"
 #include "PumpSwitch.h"
 #include "lora.h"
 
@@ -58,7 +58,7 @@ void setup()
 }
 void loop()
 {
-    float sens[num_sensor];
+    static float sens[num_sensor];
     if (millis() - prevMillisSensor > intervalSensor)
     {
         prevMillisSensor = millis();
@@ -66,19 +66,11 @@ void loop()
         adc0.setMultiplexer(uint16_t(i));
         adc0.triggerConversion();
         pollAlertReadyPin();
-        sensor[i].value = adc0.getMilliVolts(false)-sensor[i].calib;
+        // sensor[i].value = adc0.getMilliVolts(false)-sensor[i].calib;
+        sensor[i].value = (float)rand()/RAND_MAX;
         sens[i]=sensor[i].value;
         }
     }
     SenderLoop(sens,num_sensor);
-    if (millis() - prevMillisSerial > intervalSerial)
-    {
-        prevMillisSerial = millis();
-        for(int i=0;i<num_sensor;i++){
-        Serial.print("\t");
-        Serial.print(sensor[i].value, 3); 
-        Serial.print("mV\t");
-        }
-    }
     motor_loop();
 }
