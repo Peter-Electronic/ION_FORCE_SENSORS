@@ -13,10 +13,10 @@
 
 #include <Wire.h>
 #include <DFRobot_ADS1115.h>
-#define num_sen0 4
+#define num_sen0 2
 DFRobot_ADS1115 ads(&Wire);
 // int ADC = 25;
-#define num_sensor 8
+#define num_sensor 4
 struct Sensor_value{
     float value;
     float calib;
@@ -28,6 +28,12 @@ float sens[num_sensor];
 
 void adc_setup(void) 
 {
+    ads.setAddr_ADS1115(ADS1115_IIC_ADDRESS0);   // 0x48
+    ads.setGain(eGAIN_FOUR);   
+    ads.setMode(eMODE_SINGLE);       // single-shot mode
+    ads.setRate(eRATE_128);          // 128SPS (default)
+    ads.setOSMode(eOSMODE_SINGLE);   // Set to start a single-conversion
+    ads.setAddr_ADS1115(ADS1115_IIC_ADDRESS1);   // 0x49
     ads.setGain(eGAIN_FOUR);   
     ads.setMode(eMODE_SINGLE);       // single-shot mode
     ads.setRate(eRATE_128);          // 128SPS (default)
@@ -84,7 +90,11 @@ void adc_loop()
 //           Serial.print(":");
 //           Serial.print(sensor[i].value);
 //           Serial.print("mV\t");
-sens[i] = ads.readVoltage(i)-sensor[i].calib;
+if(i==0){
+               sensor[i].value=ads.readVoltage(i);
+               continue;
+           }
+sens[i-1] = ads.readVoltage(i)-sensor[0].value;
 
     }
     }
@@ -95,8 +105,8 @@ sens[i] = ads.readVoltage(i)-sensor[i].calib;
     ads.setAddr_ADS1115(ADS1115_IIC_ADDRESS1);   // 0x49
     if (ads.checkADS1115())
     {
-       for(int i=num_sen0;i<num_sensor;i++){
-           sens[i] = ads.readVoltage(i-num_sen0)-sensor[i].calib;
+       for(int i=num_sen0-1;i<num_sensor;i++){
+           sens[i] = ads.readVoltage(i)-sensor[0].value;
           //  sensor[i].value = ads.readVoltage(i-num_sen0)-sensor[i].calib;
           // Serial.print("ADC2 A");
           // Serial.print(i);

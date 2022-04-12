@@ -19,12 +19,11 @@ DFRobot_ADS1115 ads(&Wire);
 void setup(void) 
 {
     Serial.begin(115200);
-
+    ads.init();
     ads.setGain(eGAIN_TWOTHIRDS);    // 2/3x gain
     ads.setMode(eMODE_SINGLE);       // single-shot mode
     ads.setRate(eRATE_128);          // 128SPS (default)
     ads.setOSMode(eOSMODE_SINGLE);   // Set to start a single-conversion
-    ads.init();
 }
 
 void loop(void) 

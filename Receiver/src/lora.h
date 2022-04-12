@@ -112,9 +112,17 @@ void ReceiverLoop(float *Data, byte sizeOfData)
             for (byte i = 0; i < sizeOfData; i++)
             {
                 byte2float(&Data[i], byteArr, i * 4);
-                // Serial.print(Data[i]);
-                // Serial.print(",");
+                Serial.print(Data[i]);
+                Serial.print("\t");
             }
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        // Serial.print("\t");
+        // Serial.print(random(5)); // Serial.print("mV\t");
+        Serial.print(";");
             // // char buf[256];
             // //   terminal.println(str);
             // // terminal.flush();

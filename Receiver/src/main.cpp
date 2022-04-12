@@ -10,8 +10,7 @@ long prevMillisBlynk = 0;
 int intervalBlynk = 500;
 long prevMillisSerial = 0;
 int intervalSerial = 100;
-    int ii;
-    float sens[num_sensor];
+float sens[num_sensor];
 #include "utilities.h"
 #include "boards.h"
 #include <WiFi.h>
@@ -41,25 +40,25 @@ void setup()
 }
 void loop()
 {
+    static int ii=0;
     ReceiverLoop(sens,num_sensor);
-    if (millis() - prevMillisSerial > intervalSerial)
-    {
-        prevMillisSerial = millis();
-        for(int i=0;i<num_sensor;i++){
-        Serial.print(random(3), 3); // Serial.print("mV\t");
-        if(i==3) break;
-        Serial.print("\t");
-        }
-        // Serial.print(random(5)); // Serial.print("mV\t");
-        // Serial.print("\t");
-        // Serial.print(random(5)); // Serial.print("mV\t");
-        // Serial.print("\t");
-        // Serial.print(random(5)); // Serial.print("mV\t");
-        // Serial.print("\t");
-        // Serial.print(random(5)); // Serial.print("mV\t");
-        Serial.print(";");
+    // if (millis() - prevMillisSerial > intervalSerial)
+    // {
+    //     prevMillisSerial = millis();
+    //     for(int i=0;i<num_sensor;i++){
+    //     Serial.print(sens[i],0); // Serial.print("mV\t");
+    //     Serial.print("\t");
+    //     }
+    //     // Serial.print(random(5)); // Serial.print("mV\t");
+    //     // Serial.print("\t");
+    //     // Serial.print(random(5)); // Serial.print("mV\t");
+    //     // Serial.print("\t");
+    //     // Serial.print(random(5)); // Serial.print("mV\t");
+    //     // Serial.print("\t");
+    //     // Serial.print(random(5)); // Serial.print("mV\t");
+    //     Serial.print(";");
 
-    }
+    // }
     #ifdef Blynk_ON
     Blynk.run();
     if (millis() - prevMillisBlynk > intervalBlynk)

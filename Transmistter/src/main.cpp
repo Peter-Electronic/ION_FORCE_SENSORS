@@ -17,8 +17,8 @@ void setup()
     Lora_Setup();
     adc_setup();
     prevMillisSensor = millis();
-    //motor_setup();
-    adc_calib();
+    motor_setup();
+    //adc_calib();
 }
 void loop()
 {
@@ -31,5 +31,5 @@ void loop()
     }
 
     SenderLoop(sens,num_sensor);
-    //motor_loop();
+    motor_loop();
 }
