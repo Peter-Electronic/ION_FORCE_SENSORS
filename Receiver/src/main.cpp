@@ -2,7 +2,7 @@
 #define BLYNK_DEVICE_NAME "ADCsensor"
 #define BLYNK_AUTH_TOKEN "1NGbAJmj3xNn2F03x0oNPcQVsB-d0WJe"
 // Comment this out to disable prints and save space
-#define Blynk_ON
+//#define Blynk_ON
 #define BLYNK_PRINT Serial
 // int ADC = 25;
 #define num_sensor 4
@@ -42,23 +42,19 @@ void loop()
 {
     static int ii=0;
     ReceiverLoop(sens,num_sensor);
-    // if (millis() - prevMillisSerial > intervalSerial)
-    // {
-    //     prevMillisSerial = millis();
-    //     for(int i=0;i<num_sensor;i++){
-    //     Serial.print(sens[i],0); // Serial.print("mV\t");
-    //     Serial.print("\t");
-    //     }
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     // Serial.print("\t");
-    //     // Serial.print(random(5)); // Serial.print("mV\t");
-    //     Serial.print(";");
-
-    // }
+    if (millis() - prevMillisSerial > intervalSerial)
+    {
+        Serial.print("      "); // Serial.print("mV\t");
+        prevMillisSerial = millis();
+        for(int i=0;i<num_sensor;i++){
+        Serial.print(sens[i],0); // Serial.print("mV\t");
+        if(i==num_sensor)
+        break;
+        Serial.print("$$");
+        }
+        Serial.print(";");
+        Serial.print("      "); // Serial.print("mV\t");
+    }
     #ifdef Blynk_ON
     Blynk.run();
     if (millis() - prevMillisBlynk > intervalBlynk)
