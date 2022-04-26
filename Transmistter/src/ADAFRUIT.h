@@ -7,11 +7,9 @@
 //     2016-03-22 - initial release
 //
 //     2019-4-30
-// JFM modified for re-initialising and output of multiple PGA resolutions for 
-// comparison of readings. Also when debug is active serial receiving 's' 
-// outputs register values. 
-
-
+// JFM modified for re-initialising and output of multiple PGA resolutions for
+// comparison of readings. Also when debug is active serial receiving 's'
+// outputs register values.
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -54,71 +52,111 @@ ADS1115 -->  UNO
 ADS1115 adc0(ADS1115_DEFAULT_ADDRESS);
 ADS1115 adc1(ADS1115_ADDRESS_ADDR_VDD);
 
+#define ADCPIN 36
+//#define alertReadyPin 35
+int adcValue;
+float voltValue;
 // Wire ADS1115 ALERT/RDY pin to Arduino pin 2
-//const int alertReadyPin = 32;
+// const int alertReadyPin = 32;
 
-void init_ads1115() {
+void adc_setup()
+{
+  // analogSetPinAttenuation(ADCPIN,ADC_0db); // 100-900mV
+  // adcAttachPin(ADCPIN);
   Serial.println("Testing device connections...");
-    Serial.println(adc0.testConnection() ? "ADS1115 connection successful" : "ADS1115 connection failed");
-    
-    adc0.initialize(); // initialize ADS1115 16 bit A/D chip
+  Serial.println(adc0.testConnection() ? "0x48 connection successful" : "0x48 connection failed");
+  Serial.println(adc1.testConnection() ? "0x49 connection successful" : "0x49 connection failed");
+  adc0.initialize(); // initialize ADS1115 16 bit A/D chip
 
+  // We're going to do single shot sampling
+  adc0.setMode(ADS1115_MODE_SINGLESHOT);
 
-    // We're going to do single shot sampling
-    adc0.setMode(ADS1115_MODE_CONTINUOUS);
-    
-    // Slow things down so that we can see that the "poll for conversion" code works
-    adc0.setRate(ADS1115_RATE_860);
-    adc0.setMultiplexer(ADS1115_MUX_P0_N1);
-    adc0.setGain(ADS1115_PGA_0P512);
-     adc1.initialize(); // initialize ADS1115 16 bit A/D chip
+  // Slow things down so that we can see that the "poll for conversion" code works
+  adc0.setRate(ADS1115_RATE_860);
+  adc0.setMultiplexer(ADS1115_MUX_P0_N1);
+  adc0.setGain(ADS1115_PGA_2P048);
+  adc1.initialize(); // initialize ADS1115 16 bit A/D chip
 
+  // We're going to do single shot sampling
+  adc1.setMode(ADS1115_MODE_SINGLESHOT);
 
-    // We're going to do single shot sampling
-    adc1.setMode(ADS1115_MODE_CONTINUOUS);
-    
-    // Slow things down so that we can see that the "poll for conversion" code works
-    adc1.setRate(ADS1115_RATE_860);
-    adc1.setMultiplexer(ADS1115_MUX_P0_N1);
-    adc1.setGain(ADS1115_PGA_0P512);
-        
-    // Set the gain (PGA) +/- 6.144v
-    // Note that any analog input must be higher than Ã¢¬0.3V and less than VDD +0.3
-    // ALERT/RDY pin will indicate when conversion is ready
-    
-    // pinMode(alertReadyPin,INPUT_PULLUP);
-    // adc0.setConversionReadyPinMode();
+  // Slow things down so that we can see that the "poll for conversion" code works
+  adc1.setRate(ADS1115_RATE_860);
+  adc1.setMultiplexer(ADS1115_MUX_P0_N1);
+  adc1.setGain(ADS1115_PGA_2P048);
 
-    // To get output from this method, you'll need to turn on the 
-    //#define ADS1115_SERIAL_DEBUG // in the ADS1115.h file
-    #ifdef ADS1115_SERIAL_DEBUG
-    adc0.showConfigRegister();
-    Serial.print("HighThreshold="); Serial.println(adc0.getHighThreshold(),BIN);
-    Serial.print("LowThreshold="); Serial.println(adc0.getLowThreshold(),BIN);
-    #endif
+  // Set the gain (PGA) +/- 6.144v
+  // Note that any analog input must be higher than Ã¢¬0.3V and less than VDD +0.3
+  // ALERT/RDY pin will indicate when conversion is ready
+
+  // pinMode(alertReadyPin,INPUT_PULLUP);
+  adc0.setConversionReadyPinMode();
+
+// To get output from this method, you'll need to turn on the
+//#define ADS1115_SERIAL_DEBUG // in the ADS1115.h file
+#ifdef ADS1115_SERIAL_DEBUG
+  adc0.showConfigRegister();
+  Serial.print("HighThreshold=");
+  Serial.println(adc0.getHighThreshold(), BIN);
+  Serial.print("LowThreshold=");
+  Serial.println(adc0.getLowThreshold(), BIN);
+#endif
 }
 
-/** Poll the assigned pin for conversion status 
+/** Poll the assigned pin for conversion status
  */
-void pollAlertReadyPin() {
-  for (uint32_t i = 0; i<100000; i++)
-    if (!digitalRead(alertReadyPin)) return;
-   Serial.println("Failed to wait for AlertReadyPin, it's stuck high!");
-   // If gets stuck do -something = init.
-   init_ads1115();
+void pollAlertReadyPin()
+{
+  // for (uint32_t i = 0; i<100000; i++)
+  //  if (!digitalRead(alertReadyPin)) return;
+  //  Serial.println("Failed to wait for AlertReadyPin, it's stuck high!");
+  // If gets stuck do -something = init.
+  //  adc_setup();
+  delay(10);
 }
 
-int adc_loop() {
-    // adc0.setGain(ADS1115_PGA_0P512);
-    // adc0.triggerConversion();
-    // pollAlertReadyPin();
-    // Serial.print("A1: "); Serial.print(adc0.getMilliVolts(false),3); Serial.print("mV\t");
-    // Serial.println(" PGA:  512 mv acc: 15.625uV");
-    // adc0.setGain(ADS1115_PGA_0P256);
-    //Serial.println(" PGA:  256 mv acc: 7.8125uV");
+void adc_loop(float *sens, byte sizeOfData)
+{
+  //   static uint16_t temp[30];
+  //   uint32_t ave=0;
+  //   for(int i=0;i<29;i++){
+  // temp[i]=temp[i+1];
+  // ave+=temp[i];
+  //   }
+  //   temp[29]=analogRead(ADCPIN);
+  //     voltValue = (ave+temp[29])*3200/4096/30+100; //need to scale to analog value
+  //     Serial.print(voltValue);Serial.print(",");
 
-    //Serial.print("Alert/RDY "); Serial.println(digitalRead(alertReadyPin));
-    //Serial.println();
-    return 0;
+  //     // The below method sets the mux and gets a reading.
+  adc0.setMultiplexer(ADS1115_MUX_P0_N1);
+  adc0.triggerConversion();
+  pollAlertReadyPin();
+  // Serial.print("A0: ");
+  // Serial.print(-adc0.getMilliVolts(false));
+  // Serial.print(",");
+  sens[0]=-adc0.getMilliVolts(false);
+  adc0.setMultiplexer(ADS1115_MUX_P0_N3);
+  adc0.triggerConversion();
+  pollAlertReadyPin();
+  //    Serial.print("A1: "); Serial.print(adc0.getMilliVolts(false)); Serial.print("\t");
+  // Serial.print(-adc0.getMilliVolts(false));
+  // Serial.print(",");
+  sens[1]=-adc0.getMilliVolts(false);
+
+  adc1.setMultiplexer(ADS1115_MUX_P0_N1);
+  adc1.triggerConversion();
+  pollAlertReadyPin();
+  // Serial.print("A0: ");
+  // Serial.print(-adc1.getMilliVolts(false));
+  // Serial.print(",");
+  sens[2]=-adc1.getMilliVolts(false);
+
+  adc1.setMultiplexer(ADS1115_MUX_P0_N3);
+  adc1.triggerConversion();
+  pollAlertReadyPin();
+  //    Serial.print("A1: "); Serial.print(adc0.getMilliVolts(false)); Serial.print("\t");
+  // Serial.print(-adc1.getMilliVolts(false));
+  // Serial.print(",");
+  sens[3]=-adc1.getMilliVolts(false);
+  // Serial.println();
 }
-  

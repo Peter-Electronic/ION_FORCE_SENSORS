@@ -15,16 +15,6 @@
 #include <DFRobot_ADS1115.h>
 #define num_sen0 2
 DFRobot_ADS1115 ads(&Wire);
-// int ADC = 25;
-#define num_sensor 4
-struct Sensor_value{
-    float value;
-    float calib;
-    int sample;
-} sensor_default={0,0,0};
-// float val0[2], val1[2], val2[2];
-struct Sensor_value sensor[num_sensor];
-float sens[num_sensor];
 
 void adc_setup(void) 
 {
