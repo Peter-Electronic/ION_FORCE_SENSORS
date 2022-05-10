@@ -11,6 +11,10 @@
 		{
 			"name": "Transmistter",
 			"path": "Transmistter"
+		},
+		{
+			"name": "ESP32",
+			"path": "..\\..\\OneDrive - Macquarie University\\Documents\\PlatformIO\\Projects\\ESP32"
 		}
 	],
 	"settings": {
@@ -19,7 +23,9 @@
 			"fstream": "cpp",
 			"istream": "cpp",
 			"ostream": "cpp",
-			"sstream": "cpp"
+			"sstream": "cpp",
+			"string_view": "cpp",
+			"regex": "cpp"
 		}
 	}
 }

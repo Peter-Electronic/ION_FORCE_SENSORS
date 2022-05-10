@@ -44,16 +44,17 @@ void loop()
     ReceiverLoop(sens,num_sensor);
     if (millis() - prevMillisSerial > intervalSerial)
     {
-        Serial.print("      "); // Serial.print("mV\t");
+        Serial.print("START"); // Serial.print("mV\t");
         prevMillisSerial = millis();
+        Serial.print("$$");
         for(int i=0;i<num_sensor;i++){
         Serial.print(sens[i],0); // Serial.print("mV\t");
         if(i==num_sensor)
         break;
         Serial.print("$$");
         }
+        Serial.print("END"); // Serial.print("mV\t");
         Serial.print(";");
-        Serial.print("      "); // Serial.print("mV\t");
     }
     #ifdef Blynk_ON
     Blynk.run();

@@ -30,25 +30,23 @@ bool initPMU()
     *   PMU.setDCDC3Voltage(3300);
     *   PMU.setPowerOutPut(AXP192_DCDC3, AXP202_ON);
     *
-    * * * */
-   PMU.setDCDC3Voltage(3500);
-   PMU.setPowerOutPut(AXP192_DCDC3,AXP202_ON);
+//     * * * */
     /*
      *   Turn off unused power sources to save power
      * **/
 
-    PMU.setPowerOutPut(AXP192_DCDC1, AXP202_OFF);
-    PMU.setPowerOutPut(AXP192_DCDC2, AXP202_OFF);
-    PMU.setPowerOutPut(AXP192_LDO2, AXP202_OFF);
-    PMU.setPowerOutPut(AXP192_LDO3, AXP202_OFF);
-    PMU.setPowerOutPut(AXP192_EXTEN, AXP202_OFF);
+    //PMU.setPowerOutPut(AXP192_DCDC1, AXP202_OFF);
+    // PMU.setPowerOutPut(AXP192_DCDC2, AXP202_OFF);
+    // PMU.setPowerOutPut(AXP192_LDO2, AXP202_OFF);
+    // PMU.setPowerOutPut(AXP192_LDO3, AXP202_OFF);
+    // PMU.setPowerOutPut(AXP192_EXTEN, AXP202_OFF);
 
     /*
      * Set the power of LoRa and GPS module to 3.3V
      **/
     PMU.setLDO2Voltage(3300);   //LoRa VDD
     PMU.setLDO3Voltage(3300);   //GPS  VDD
-    PMU.setDCDC1Voltage(700);  //3.3V Pin next to 21 and 22 is controlled by DCDC1
+    PMU.setDCDC1Voltage(3300);  //3.3V Pin next to 21 and 22 is controlled by DCDC1
 
     PMU.setPowerOutPut(AXP192_DCDC1, AXP202_ON);
     PMU.setPowerOutPut(AXP192_LDO2, AXP202_ON);
@@ -91,7 +89,7 @@ SPIClass SDSPI(HSPI);
 
 void initBoard()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     while (!Serial) {
     delay(100);
  }

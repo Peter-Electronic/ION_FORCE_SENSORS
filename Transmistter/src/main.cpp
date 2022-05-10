@@ -29,23 +29,42 @@ void setup()
     Lora_Setup();
     adc_setup();
     prevMillisSensor = millis();
-    // motor_setup();
+    motor_setup();
     // adc_calib();
+    //Serial.print("PASS1");
 }
 void loop()
 {
-    // if (millis() - prevMillisSensor > intervalSensor)
-    // {
-    //     prevMillisSensor = millis();
-    //     // sensor[i].value = (float)rand()/RAND_MAX;
-    // }
-    adc_loop(sens, num_sensor);
+    //Serial.print("PASS2");
 
+    if ((millis() % (PUMP_TIME * 2)) > PUMP_TIME)
+    {
+        digitalWrite(PUMPPIN, LOW);
+        if ((millis() % (PUMP_TIME * 2)) > 3 * PUMP_TIME / 2)
+        {
+            adc_loop(sens, num_sensor);
+            for (byte i = 0; i < num_sensor; i++)
+            {
+                // sens[i]=(i-2)*100+random(10);
+                Serial.print(sens[i]);
+                Serial.print(",");
+            }
+        Serial.println();
+            
+            SenderLoop(sens, num_sensor);
+        }
+        else
+            delay(1);
+    }
+    else
+    {
+        digitalWrite(PUMPPIN, HIGH);
+        // SenderLoop(sens, num_sensor);
+    }
     // for(int i=0;i<num_sensor;i++){
     //     Serial.print(sens[i]);
     //     Serial.print("\t");
     // }
     // Serial.println();
-    SenderLoop(sens, num_sensor);
-    // //motor_loop();
+    // motor_loop();
 }
